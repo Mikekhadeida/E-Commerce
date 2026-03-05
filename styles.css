@@ -1,0 +1,358 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Body */
+body {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+/* Header */
+header {
+  /* background-color: #2c3e50; */
+  /* background-color: #3a5571; */
+  background-color: #35587e;
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+}
+
+header nav a {
+  color: #fff;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+header nav a:hover {
+  text-decoration: underline;
+}
+
+/* Container */
+.container {
+  width: 90%;
+  max-width: 400px;
+  margin: 50px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Form title */
+.form-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+/* Input Group */
+.input-group {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.input-group i {
+  position: absolute;
+  top: 12px;
+  left: 10px;
+  color: #999;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 12px 12px 35px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+  border-color: #2980b9;
+}
+
+.input-group label {
+  position: absolute;
+  top: 12px;
+  left: 35px;
+  color: #999;
+  pointer-events: none;
+  transition: 0.2s ease all;
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+  top: -10px;
+  left: 30px;
+  font-size: 12px;
+  background-color: #fff;
+  padding: 0 5px;
+  color: #2980b9;
+}
+
+/* Submit Button */
+button.btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #2980b9;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button.btn:hover {
+  background-color: #1f6391;
+}
+
+/* OR Text */
+.or {
+  text-align: center;
+  margin: 20px 0;
+  color: #888;
+}
+
+/* Social Icons */
+.icons {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.icons i {
+  font-size: 24px;
+  color: #db4437; /* Google red */
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.icons i:hover {
+  transform: scale(1.1);
+}
+
+/* Links Section */
+.links {
+  text-align: center;
+}
+
+.links button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 1px solid #2980b9;
+  color: #2980b9;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.links button:hover {
+  background-color: #2980b9;
+  color: white;
+}
+
+/* profile picture */
+
+/* Position profile in top-right corner */
+.profile {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Profile circle style */
+.profile-circle {
+  width: 40px;
+  height: 40px;
+  background-color: #2980b9;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Logout button style */
+#logoutBtn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* footer */
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.footer-links a:visited {
+  color: white;             /* Ensures visited links stay white , the color of white */
+}
+
+
+main {
+  flex: 1; /* Fills available space between header and footer */
+}
+
+.site-footer {
+  background-color: #222;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.site-footer {
+  background-color: #222;
+  color: #eee;
+  padding: 2rem;
+  font-size: 0.9rem;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+address {
+  font-style: normal;
+  line-height: 1.6;
+}
+
+.products-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    padding: 20px;
+}
+
+.product {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+
+    display: flex;
+    flex-direction: column;        /* keeps layout vertical */
+    justify-content: space-between;/* pushes bottom content down */
+    height: 420px;                 /* equal height cards */
+
+    transition: box-shadow 0.3s ease;
+}
+
+.product img {
+    width: 100%;
+    height: 170px;          /* fixed image height */
+    object-fit: contain;    /* keeps image ratio */
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.product h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.product p {
+    font-size: 14px;
+    line-height: 1.4;
+
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;     /* limits long description */
+    -webkit-box-orient: vertical;
+}
+
+.product .meta {
+    margin-top: auto;   /* pushes this section to bottom */
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.product:hover {
+    box-shadow: 0 14px 20px rgba(0,0,0,0.18);
+}
+
+/* Push footer to bottom */
+html, body {
+  height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-footer {
+  margin-top: auto;
+}
+
+
+/* for to display out of stock  */
+.badge{
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+}
+.badge.out{ background:#ffdddd; color:#a10000; border:1px solid #ffb3b3; }
+.badge.in{  background:#ddffdd; color:#0a6b0a; border:1px solid #b6f0b6; }
+
+
+nav {
+  display: flex;
+  flex-direction: column;   /* links on top, search below */
+  justify-content: center;
+  gap: 10px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;          /* wraps nicely if screen is small */
+}
+
+.nav-search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.nav-search input {
+  width: 240px;             /* adjust */
+  padding: 6px 10px;
+}
+
+.clear-link {
+  margin-left: 6px;
+}
