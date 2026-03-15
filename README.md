@@ -63,8 +63,7 @@ Planned functionality:
 This feature is being actively developed and will connect payment confirmations to stored order records.
 
 ---
-
-##Screenshots
+## 📸 Screenshots
 
 ## Home page 
 ![Home](screenshots/home.png)
