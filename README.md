@@ -1,6 +1,6 @@
 **Status:** Actively Improving (Orders System in Progress)
 
-# Shopora – PHP E-Commerce Web Application
+# Shopora – PHP E-Commerce Web Application 🛒🌐📦
 
 Shopora is a full-stack e-commerce web application built using PHP and MySQL.  
 It allows users to register, log in, browse products, and sellers to manage inventory.
@@ -63,5 +63,14 @@ Planned functionality:
 This feature is being actively developed and will connect payment confirmations to stored order records.
 
 ---
+
+##Screenshots
+
+## Home page 
+![Home](screenshots/home.png)
+
+### Add Item
+
+### Edit Item
 
 ## 📂 Project Structure
