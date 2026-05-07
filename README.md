@@ -104,6 +104,48 @@ Authenticated sellers can manage inventory, edit product details, update quantit
 
 Sellers can add products, edit inventory information, upload images, and receive confirmation feedback after successful database updates.
 
+---
+
+## ⚙️ Installation
+
+1. Clone repository
+
+```bash
+git clone https://github.com/Mikekhadeida/E-Commerce.git
+```
+
+2. Import MySQL database
+
+```sql
+database.sql
+```
+
+3. Configure database connection in `db.php`
+
+4. Run local PHP server
+
+```bash
+php -S localhost:8000
+```
+
+---
+
 ## 📂 Project Structure
+
+```text
+Shopora/
+│
+├── index.php
+├── login.php
+├── register.php
+├── db.php
+├── adding_items.php
+├── seller_edit.php
+├── orders.php
+│
+├── uploads/
+├── screenshots/
+└── README.md
+```
 
 
