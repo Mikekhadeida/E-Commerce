@@ -6,7 +6,7 @@ Shopora is a full-stack e-commerce web application built using PHP and MySQL.
 It allows users to register, log in, browse products, and sellers to manage inventory.
 
 ## 🌐 Live Demo
-https://shopora.infinityfreeapp.com
+[Visit Shopora Live Demo](https://shopora.infinityfreeapp.com)
 
 ---
 
