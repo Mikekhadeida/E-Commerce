@@ -61,14 +61,45 @@ Planned functionality:
 - Update order status (Processing / Shipped / Completed)
 
 This feature is being actively developed and will connect payment confirmations to stored order records.
+---
+## Database Schema
 
+The application uses MySQL to store user accounts and product listings.
+
+### users
+| Column | Type |
+|------|------|
+| id | INT (Primary Key) |
+| username | VARCHAR |
+| email | VARCHAR |
+| password | VARCHAR |
+| created_at | TIMESTAMP |
+
+### items
+| Column | Type |
+|------|------|
+| id | INT (Primary Key) |
+| name | VARCHAR |
+| description | TEXT |
+| price | DECIMAL |
+| image | VARCHAR |
+| created_at | TIMESTAMP |
 ---
 ## 📸 Screenshots
 
 ## Home page 
 ![Home](screenshots/home.png)
 
-### Add Item
+Displays products dynamically from the MySQL database with inventory tracking and PayPal checkout integration.
+
+## 📦 Seller Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+Authenticated sellers can manage inventory, edit product details, update quantities, and upload images through the Seller Dashboard.
+## 🛠 Product Management Workflow
+![Workflow](screenshots/workflow.png)
+
+Sellers can add products, edit inventory information, upload images, and receive confirmation feedback after successful database updates.
 
 ### Edit Item
 

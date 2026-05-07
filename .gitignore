@@ -2,3 +2,11 @@ db.php
 .env
 uploads/
 .DS_Store
+
+
+# That means:
+
+#  Your real database credentials will NOT go to GitHub
+#  Uploaded images will NOT flood your repo
+#  Mac junk files ignored
+#  Future environment variables ignored

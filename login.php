@@ -2,7 +2,7 @@
 session_start();
 
 // Database connection details
-require 'db.php';;
+require 'db.php';
 
 // Connect to DB
 $conn = new mysqli($host, $user, $password, $database);
