@@ -50,6 +50,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <th>Status</th>
         <th>Tracking</th>
         <th>Date</th>
+        <th>Shipped Date</th>
         <th>Action</th>
     </tr>
 
@@ -65,7 +66,19 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <?= htmlspecialchars($o['tracking_carrier'] ?? '') ?>
                     <?= htmlspecialchars($o['tracking_number'] ?? '') ?>
                 </td>
-                <td><?= htmlspecialchars($o['created_at']) ?></td>
+                <td>
+                        <?= date("M d, Y g:i A", strtotime($o['created_at'])) ?>
+                    </td>
+
+                    <td>
+                    <?php
+                    if (!empty($o['shipped_at'])) {
+                        echo date("M d, Y g:i A", strtotime($o['shipped_at']));
+                    } else {
+                        echo "Not shipped yet";
+                    }
+                    ?>
+                    </td>
                 <td>
                     <a href="order_details.php?id=<?= (int)$o['id'] ?>">Open</a>
                 </td>

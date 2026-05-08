@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 if (!isset($_SESSION['user_name'])) {
     header("Location: seller_login.php");
     exit;
@@ -28,12 +29,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $carrier = trim($_POST['carrier'] ?? '');
     $tracking = trim($_POST['tracking'] ?? '');
 
+    /*
+      Logic:
+      - If tracking is pasted AND shipped_at is empty, set shipped_at = NOW()
+      - If tracking already existed, keep original shipped_at
+      - If tracking is empty, do not set shipped_at
+    */
     $update = $pdo->prepare("
-        UPDATE orders 
-        SET status = ?, tracking_carrier = ?, tracking_number = ?
+        UPDATE orders
+        SET
+            status = ?,
+            tracking_carrier = ?,
+            tracking_number = ?,
+            shipped_at =
+                CASE
+                    WHEN ? <> '' AND shipped_at IS NULL THEN NOW()
+                    ELSE shipped_at
+                END
         WHERE id = ?
     ");
-    $update->execute([$status, $carrier, $tracking, $id]);
+
+    $update->execute([
+        $status,
+        $carrier,
+        $tracking,
+        $tracking,
+        $id
+    ]);
 
     header("Location: order_details.php?id=" . $id);
     exit;
@@ -52,11 +74,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <h2>Order Details</h2>
 
+<p><b>Order ID:</b> #<?= (int)$order['id'] ?></p>
 <p><b>Order #:</b> <?= htmlspecialchars($order['order_number']) ?></p>
 <p><b>Buyer:</b> <?= htmlspecialchars($order['buyer_name']) ?></p>
 <p><b>Email:</b> <?= htmlspecialchars($order['buyer_email']) ?></p>
 <p><b>Total:</b> $<?= number_format((float)$order['total'], 2) ?></p>
 <p><b>Current Status:</b> <?= htmlspecialchars($order['status']) ?></p>
+
+<p>
+    <b>Order Date:</b>
+    <?= date("M d, Y g:i A", strtotime($order['created_at'])) ?>
+</p>
+
+<p>
+    <b>Shipped Date:</b>
+    <?php
+    if (!empty($order['shipped_at'])) {
+        echo date("M d, Y g:i A", strtotime($order['shipped_at']));
+    } else {
+        echo "Not shipped yet";
+    }
+    ?>
+</p>
+
+<p>
+    <b>Tracking:</b>
+    <?php
+    if (!empty($order['tracking_number'])) {
+        echo htmlspecialchars($order['tracking_carrier'] ?? '') . " ";
+        echo htmlspecialchars($order['tracking_number']);
+    } else {
+        echo "No tracking added yet";
+    }
+    ?>
+</p>
 
 <hr>
 
