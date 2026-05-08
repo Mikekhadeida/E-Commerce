@@ -1,42 +1,82 @@
 <?php
 session_start();
+if (!isset($_SESSION['user_name'])) {
+    header("Location: seller_login.php");
+    exit;
+}
+
+$pdo = new PDO("mysql:host=localhost;dbname=my_database", "root", "");
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+$filter = $_GET['filter'] ?? 'all';
+
+if ($filter === 'shipped') {
+    $stmt = $pdo->prepare("SELECT * FROM orders WHERE status = 'SHIPPED' ORDER BY created_at DESC");
+    $stmt->execute();
+} elseif ($filter === 'unshipped') {
+    $stmt = $pdo->prepare("SELECT * FROM orders WHERE status != 'SHIPPED' ORDER BY created_at DESC");
+    $stmt->execute();
+} else {
+    $stmt = $pdo->query("SELECT * FROM orders ORDER BY created_at DESC");
+}
+
+$orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Orders - Shopora</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Orders</title>
 </head>
 <body>
 
-<h1>Orders</h1>
+<h2>Orders</h2>
 
-<div style="padding:20px; border:1px solid #ccc; border-radius:8px; max-width:600px;">
-    <h2>🚧 Orders System Under Development</h2>
+<a href="seller_items.php">My Items</a> |
+<a href="Orders.php?filter=all">All Orders</a> |
+<a href="Orders.php?filter=unshipped">Unshipped</a> |
+<a href="Orders.php?filter=shipped">Shipped</a> |
+<a href="logout.php">Logout</a>
 
-    <p>
-        The Orders management feature is currently being built.
-    </p>
+<br><br>
 
-    <p>
-        Upcoming features:
-    </p>
+<table border="1" cellpadding="10" cellspacing="0">
+    <tr>
+        <th>Order #</th>
+        <th>Buyer</th>
+        <th>Email</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Tracking</th>
+        <th>Date</th>
+        <th>Action</th>
+    </tr>
 
-    <ul>
-        <li>Store completed PayPal transactions</li>
-        <li>Display customer order history</li>
-        <li>Seller order management dashboard</li>
-        <li>Order status updates (Processing / Shipped / Completed)</li>
-    </ul>
-
-    <p>
-        Please check back soon.
-    </p>
-</div>
-
-<br>
-<a href="index.php">← Back to Home</a>
+    <?php if (count($orders) > 0): ?>
+        <?php foreach ($orders as $o): ?>
+            <tr>
+                <td><?= htmlspecialchars($o['order_number']) ?></td>
+                <td><?= htmlspecialchars($o['buyer_name']) ?></td>
+                <td><?= htmlspecialchars($o['buyer_email']) ?></td>
+                <td>$<?= number_format((float)$o['total'], 2) ?></td>
+                <td><?= htmlspecialchars($o['status']) ?></td>
+                <td>
+                    <?= htmlspecialchars($o['tracking_carrier'] ?? '') ?>
+                    <?= htmlspecialchars($o['tracking_number'] ?? '') ?>
+                </td>
+                <td><?= htmlspecialchars($o['created_at']) ?></td>
+                <td>
+                    <a href="order_details.php?id=<?= (int)$o['id'] ?>">Open</a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="8">No orders found.</td>
+        </tr>
+    <?php endif; ?>
+</table>
 
 </body>
 </html>
