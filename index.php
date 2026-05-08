@@ -43,6 +43,7 @@ if ($q === "") {
     <a href="#">Cart</a>
     <a href="adding_items.php">Seller (Adding items)</a>
     <a href="edit_items.php">Edit Items</a>
+    <a href="Orders.php">Orders</a>
     <!-- <a href="login.php">Login</a>
     <a href="register.php">Register</a> -->
 
