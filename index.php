@@ -20,7 +20,7 @@ if ($q === "") {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<!-- <head> -->
   <meta charset="UTF-8">
   <title>Home - Shopora</title>
   
@@ -29,7 +29,7 @@ if ($q === "") {
 
   <!-- PayPal SDK -->
   <script src="https://www.paypal.com/sdk/js?client-id=AYIl_R81qs541PWmUPKIZt7xDnEO8p6hOLFoocYuqoEDhy3vXLvtmnQN5yaECv8i3gPiUVkKgKm8YRgl&currency=USD"></script>
-</head>
+<!-- </head>\ -->
 
 <body>
 
@@ -40,9 +40,9 @@ if ($q === "") {
   <div class="nav-links">
     <a href="index.php">Home</a>
     <a href="#">Products</a>
-    <a href="#">Cart</a>
-    <a href="adding_items.php">Seller (Adding items)</a>
-    <a href="edit_items.php">Edit Items</a>
+    <<a href="Buyers/cart.php">Cart</a>
+    <a href="Seller/adding_items.php">Seller (Adding items)</a>
+    <a href="Seller/edit_items.php">Edit Items</a>
     <a href="Orders.php">Orders</a>
     <!-- <a href="login.php">Login</a>
     <a href="register.php">Register</a> -->
@@ -116,35 +116,18 @@ if ($result && $result->num_rows > 0):
 
         <?php if ($qty > 0): ?>
             <p><strong>Quantity:</strong> <?= $qty ?></p>
-            <div id="paypal-button-container-<?= $productId ?>"></div>
+            <a href="add_to_cart.php?item_id=<?= $productId ?>" 
+              class="add-cart-btn">
+             Add to Cart
+            </a>
+            
         <?php else: ?>
             <p style="color:red;"><strong>Out of Stock</strong></p>
         <?php endif; ?>
     </div>
 
     <?php if ($qty > 0): ?>
-    <script>
-    paypal.Buttons({
-        createOrder: function(data, actions) {
-            return actions.order.create({
-                purchase_units: [{
-                    amount: { value: '<?= $price ?>' }
-                }]
-            });
-        },
-        onApprove: function(data, actions) {
-            return actions.order.capture().then(function(details) {
-                alert('Transaction completed by ' + details.payer.name.given_name);
-
-                fetch('payment_success.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(details)
-                });
-            });
-        }
-    }).render('#paypal-button-container-<?= $productId ?>');
-    </script>
+    
     <?php endif; ?>
 
 <?php

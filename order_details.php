@@ -81,6 +81,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <p><b>Total:</b> $<?= number_format((float)$order['total'], 2) ?></p>
 <p><b>Current Status:</b> <?= htmlspecialchars($order['status']) ?></p>
 
+
+<h3>Shipping Address</h3>
+
+<p><strong>Name:</strong> <?= htmlspecialchars($order['shipping_name'] ?? '') ?></p>
+<p><strong>Phone:</strong> <?= htmlspecialchars($order['buyer_phone'] ?? '') ?></p>
+<p><strong>Address 1:</strong> <?= htmlspecialchars($order['shipping_address1'] ?? '') ?></p>
+<p><strong>Address 2:</strong> <?= htmlspecialchars($order['shipping_address2'] ?? '') ?></p>
+<p><strong>City:</strong> <?= htmlspecialchars($order['shipping_city'] ?? '') ?></p>
+<p><strong>State:</strong> <?= htmlspecialchars($order['shipping_state'] ?? '') ?></p>
+<p><strong>ZIP:</strong> <?= htmlspecialchars($order['shipping_zip'] ?? '') ?></p>
+<p><strong>Country:</strong> <?= htmlspecialchars($order['shipping_country'] ?? '') ?></p>
+
+
 <p>
     <b>Order Date:</b>
     <?= date("M d, Y g:i A", strtotime($order['created_at'])) ?>

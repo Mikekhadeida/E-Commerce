@@ -147,5 +147,3 @@ Shopora/
 ├── screenshots/
 └── README.md
 ```
-
-
