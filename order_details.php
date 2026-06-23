@@ -24,17 +24,19 @@ if (!$order) {
     die("Order not found.");
 }
 
+$itemStmt = $pdo->prepare("
+    SELECT *
+    FROM order_items
+    WHERE order_id = ?
+");
+$itemStmt->execute([$id]);
+$items = $itemStmt->fetchAll(PDO::FETCH_ASSOC);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = $_POST['status'] ?? 'NEW';
     $carrier = trim($_POST['carrier'] ?? '');
     $tracking = trim($_POST['tracking'] ?? '');
 
-    /*
-      Logic:
-      - If tracking is pasted AND shipped_at is empty, set shipped_at = NOW()
-      - If tracking already existed, keep original shipped_at
-      - If tracking is empty, do not set shipped_at
-    */
     $update = $pdo->prepare("
         UPDATE orders
         SET
@@ -81,18 +83,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <p><b>Total:</b> $<?= number_format((float)$order['total'], 2) ?></p>
 <p><b>Current Status:</b> <?= htmlspecialchars($order['status']) ?></p>
 
+<h3>Items Purchased</h3>
+
+<?php if (count($items) > 0): ?>
+    <?php foreach ($items as $item): ?>
+        <div style="
+            border:1px solid #ccc;
+            padding:10px;
+            margin-bottom:10px;
+            width:350px;
+            display:flex;
+            gap:15px;
+            align-items:center;
+            background:#f9f9f9;
+        ">
+            <img 
+                src="uploads/<?= htmlspecialchars($item['item_image']) ?>" 
+                width="90"
+                style="object-fit:contain;"
+            >
+
+            <div>
+                <strong><?= htmlspecialchars($item['item_name']) ?></strong><br>
+                Quantity: <?= (int)$item['quantity'] ?><br>
+                Price: $<?= number_format((float)$item['price'], 2) ?>
+            </div>
+        </div>
+    <?php endforeach; ?>
+<?php else: ?>
+    <p>No item details saved for this order.</p>
+<?php endif; ?>
 
 <h3>Shipping Address</h3>
 
-<p><strong>Name:</strong> <?= htmlspecialchars($order['shipping_name'] ?? '') ?></p>
-<p><strong>Phone:</strong> <?= htmlspecialchars($order['buyer_phone'] ?? '') ?></p>
-<p><strong>Address 1:</strong> <?= htmlspecialchars($order['shipping_address1'] ?? '') ?></p>
-<p><strong>Address 2:</strong> <?= htmlspecialchars($order['shipping_address2'] ?? '') ?></p>
-<p><strong>City:</strong> <?= htmlspecialchars($order['shipping_city'] ?? '') ?></p>
-<p><strong>State:</strong> <?= htmlspecialchars($order['shipping_state'] ?? '') ?></p>
-<p><strong>ZIP:</strong> <?= htmlspecialchars($order['shipping_zip'] ?? '') ?></p>
-<p><strong>Country:</strong> <?= htmlspecialchars($order['shipping_country'] ?? '') ?></p>
+<div style="
+    border:1px solid #ccc;
+    padding:15px;
+    width:350px;
+    background:#f9f9f9;
+">
+    <?= htmlspecialchars($order['shipping_name'] ?? '') ?><br>
+    <?= htmlspecialchars($order['shipping_address1'] ?? '') ?><br>
 
+    <?php if (!empty($order['shipping_address2'])): ?>
+        <?= htmlspecialchars($order['shipping_address2']) ?><br>
+    <?php endif; ?>
+
+    <?= htmlspecialchars($order['shipping_city'] ?? '') ?>,
+    <?= htmlspecialchars($order['shipping_state'] ?? '') ?>
+    <?= htmlspecialchars($order['shipping_zip'] ?? '') ?><br>
+
+    <?= htmlspecialchars($order['shipping_country'] ?? '') ?><br><br>
+
+    <strong>Phone:</strong>
+    <?= htmlspecialchars($order['buyer_phone'] ?? '') ?>
+</div>
 
 <p>
     <b>Order Date:</b>

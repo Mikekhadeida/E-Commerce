@@ -2,6 +2,17 @@
 require 'db.php';
 session_start();
 
+$cart_count = 0;
+
+if (isset($_SESSION['user_id'])) {
+    $stmtCart = $conn->prepare("SELECT SUM(quantity) AS total FROM cart WHERE user_id = ?");
+    $stmtCart->bind_param("i", $_SESSION['user_id']);
+    $stmtCart->execute();
+    $cartResult = $stmtCart->get_result();
+    $cartRow = $cartResult->fetch_assoc();
+    $cart_count = $cartRow['total'] ?? 0;
+}
+
 // Get search query safely
 $q = trim($_GET['q'] ?? "");
 
@@ -40,9 +51,12 @@ if ($q === "") {
   <div class="nav-links">
     <a href="index.php">Home</a>
     <a href="#">Products</a>
-    <<a href="Buyers/cart.php">Cart</a>
-    <a href="Seller/adding_items.php">Seller (Adding items)</a>
-    <a href="Seller/edit_items.php">Edit Items</a>
+    <!-- <a href="Buyers/cart.php">Cart</a> -->
+     <a href="Buyers/cart.php">Cart (<?= $cart_count ?>)</a>
+    <a href="my_orders.php"> My Orders</a>
+
+    <a href="adding_items.php">Seller (Adding items)</a>
+    <a href="edit_items.php">Edit Items</a>
     <a href="Orders.php">Orders</a>
     <!-- <a href="login.php">Login</a>
     <a href="register.php">Register</a> -->
@@ -121,6 +135,9 @@ if ($result && $result->num_rows > 0):
              Add to Cart
             </a>
             
+            <a href="remove_from_cart.php?item_id=<?= $productId ?>">
+                Remove
+            </a>
         <?php else: ?>
             <p style="color:red;"><strong>Out of Stock</strong></p>
         <?php endif; ?>

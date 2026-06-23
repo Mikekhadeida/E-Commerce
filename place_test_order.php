@@ -42,15 +42,27 @@ while ($row = $result->fetch_assoc()) {
 // Save order
 $stmt = $conn->prepare("
     INSERT INTO orders (
-        order_number, buyer_name, buyer_email, total, status,
-        shipping_name, shipping_address1, shipping_address2,
-        shipping_city, shipping_state, shipping_zip, shipping_country, buyer_phone
+        user_id,
+        order_number,
+        buyer_name,
+        buyer_email,
+        total,
+        status,
+        shipping_name,
+        shipping_address1,
+        shipping_address2,
+        shipping_city,
+        shipping_state,
+        shipping_zip,
+        shipping_country,
+        buyer_phone
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 ");
 
 $stmt->bind_param(
-    "sssdsssssssss",
+    "isssdsssssssss",
+    $user_id,
     $order_number,
     $buyer_name,
     $buyer_email,
@@ -68,11 +80,50 @@ $stmt->bind_param(
 
 $stmt->execute();
 
-// Empty cart after order
+$order_id = $conn->insert_id;
+
+// Save cart items into order_items BEFORE deleting cart
+$stmt = $conn->prepare("
+    SELECT cart.item_id, cart.quantity, items.name, items.image, items.price
+    FROM cart
+    JOIN items ON cart.item_id = items.id
+    WHERE cart.user_id = ?
+");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$cartItems = $stmt->get_result();
+
+while ($item = $cartItems->fetch_assoc()) {
+    $stmt2 = $conn->prepare("
+        INSERT INTO order_items (
+            order_id,
+            item_id,
+            item_name,
+            item_image,
+            price,
+            quantity
+        )
+        VALUES (?, ?, ?, ?, ?, ?)
+    ");
+
+    $stmt2->bind_param(
+        "iissdi",
+        $order_id,
+        $item['item_id'],
+        $item['name'],
+        $item['image'],
+        $item['price'],
+        $item['quantity']
+    );
+
+    $stmt2->execute();
+}
+
+// Empty cart after saving items
 $stmt = $conn->prepare("DELETE FROM cart WHERE user_id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 
-header("Location: Orders.php");
+header("Location: my_orders.php");
 exit;
 ?>

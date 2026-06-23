@@ -57,6 +57,11 @@ if ($data && isset($data['id'])) {
     $order_stmt->execute();
 
     $order_id = $con->insert_id;
+      //wWhat this means 
+    // id
+    // 15
+    // then:
+    // $order_id = 15;
 
     // -----------------------------
     // EMAIL NOTIFICATION

@@ -46,6 +46,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <th>Order #</th>
         <th>Buyer</th>
         <th>Email</th>
+        <th>Items</th>
         <th>Total</th>
         <th>Status</th>
         <th>Tracking</th>
@@ -56,21 +57,46 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <?php if (count($orders) > 0): ?>
         <?php foreach ($orders as $o): ?>
+
+            <?php
+            $itemStmt = $pdo->prepare("
+                SELECT item_name, quantity
+                FROM order_items
+                WHERE order_id = ?
+            ");
+            $itemStmt->execute([$o['id']]);
+            $items = $itemStmt->fetchAll(PDO::FETCH_ASSOC);
+            ?>
+
             <tr>
                 <td><?= htmlspecialchars($o['order_number']) ?></td>
                 <td><?= htmlspecialchars($o['buyer_name']) ?></td>
                 <td><?= htmlspecialchars($o['buyer_email']) ?></td>
+
+                <td>
+                    <?php if (count($items) > 0): ?>
+                        <?php foreach ($items as $item): ?>
+                            <?= htmlspecialchars($item['item_name']) ?>
+                            x<?= (int)$item['quantity'] ?><br>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        No items saved
+                    <?php endif; ?>
+                </td>
+
                 <td>$<?= number_format((float)$o['total'], 2) ?></td>
                 <td><?= htmlspecialchars($o['status']) ?></td>
+
                 <td>
                     <?= htmlspecialchars($o['tracking_carrier'] ?? '') ?>
                     <?= htmlspecialchars($o['tracking_number'] ?? '') ?>
                 </td>
-                <td>
-                        <?= date("M d, Y g:i A", strtotime($o['created_at'])) ?>
-                    </td>
 
-                    <td>
+                <td>
+                    <?= date("M d, Y g:i A", strtotime($o['created_at'])) ?>
+                </td>
+
+                <td>
                     <?php
                     if (!empty($o['shipped_at'])) {
                         echo date("M d, Y g:i A", strtotime($o['shipped_at']));
@@ -78,7 +104,8 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         echo "Not shipped yet";
                     }
                     ?>
-                    </td>
+                </td>
+
                 <td>
                     <a href="order_details.php?id=<?= (int)$o['id'] ?>">Open</a>
                 </td>
@@ -86,7 +113,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endforeach; ?>
     <?php else: ?>
         <tr>
-            <td colspan="8">No orders found.</td>
+            <td colspan="10">No orders found.</td>
         </tr>
     <?php endif; ?>
 </table>
