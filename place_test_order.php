@@ -82,6 +82,28 @@ $stmt->execute();
 
 $order_id = $conn->insert_id;
 
+//inlcude the 10% rewards back, Example: $100 purchase → $10 credit & $114 purchase → $11.40 credit
+$earned_credit = $total * 0.10;
+
+$stmtCredit = $conn->prepare("
+    UPDATE users
+    SET store_credit = store_credit + ?
+    WHERE id = ?
+");
+
+$stmtCredit->bind_param(
+    "di",
+    $earned_credit,
+    $user_id
+);
+
+$stmtCredit->bind_param("di", $earned_credit, $user_id);
+$stmtCredit->execute();
+$order_id = $conn->insert_id;
+
+//Then check to make sure it works from Database SQL.
+// Run: SELECT id, user_name, store_credit FROM users; //Or SELECT * FROM users;
+
 // Save cart items into order_items BEFORE deleting cart
 $stmt = $conn->prepare("
     SELECT cart.item_id, cart.quantity, items.name, items.image, items.price

@@ -2,6 +2,19 @@
 require 'db.php';
 session_start();
 
+//to Display Credit for Costumer sees own credit.
+$store_credit = 0;
+
+if (isset($_SESSION['user_id'])) {
+    $stmtCredit = $conn->prepare("SELECT store_credit FROM users WHERE id = ?");
+    $stmtCredit->bind_param("i", $_SESSION['user_id']);
+    $stmtCredit->execute();
+    $creditResult = $stmtCredit->get_result();
+    $creditRow = $creditResult->fetch_assoc();
+
+    $store_credit = $creditRow['store_credit'] ?? 0;
+}
+
 $cart_count = 0;
 
 if (isset($_SESSION['user_id'])) {
@@ -91,6 +104,9 @@ if ($q === "") {
 
     <?php if (isset($_SESSION['user_name'])): ?>
       <div class="profile">
+        <span>
+        Store Credit: $<?= number_format($store_credit, 2) ?>
+    </span>
         <div class="profile-circle">
           <?= htmlspecialchars(strtoupper($_SESSION['user_name'][0])) ?>
         </div>

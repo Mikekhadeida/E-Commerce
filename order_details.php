@@ -24,6 +24,16 @@ if (!$order) {
     die("Order not found.");
 }
 
+//Display credits from Costumer
+$userStmt = $pdo->prepare("
+    SELECT name, email, store_credit
+    FROM users
+    WHERE id = ?
+");
+$userStmt->execute([$order['user_id']]);
+$customer = $userStmt->fetch(PDO::FETCH_ASSOC);
+
+
 $itemStmt = $pdo->prepare("
     SELECT *
     FROM order_items
@@ -75,6 +85,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <a href="Orders.php">Back to Orders</a>
 
 <h2>Order Details</h2>
+
+<!-- Display Store credit -->
+<h3>Customer Information</h3>
+
+<?php if ($customer): ?>
+    <p><strong>Name:</strong> <?= htmlspecialchars($customer['name']) ?></p>
+    <p><strong>Email:</strong> <?= htmlspecialchars($customer['email']) ?></p>
+    <p><strong>Store Credit:</strong> $<?= number_format($customer['store_credit'], 2) ?></p>
+<?php else: ?>
+    <p>No customer account found.</p>
+<?php endif; ?>
+
 
 <p><b>Order ID:</b> #<?= (int)$order['id'] ?></p>
 <p><b>Order #:</b> <?= htmlspecialchars($order['order_number']) ?></p>
