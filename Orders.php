@@ -77,7 +77,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <?php if (count($items) > 0): ?>
                         <?php foreach ($items as $item): ?>
                             <?= htmlspecialchars($item['item_name']) ?>
-                            x<?= (int)$item['quantity'] ?><br>
+                            (x<?= (int)$item['quantity'] ?>) <br>
                         <?php endforeach; ?>
                     <?php else: ?>
                         No items saved

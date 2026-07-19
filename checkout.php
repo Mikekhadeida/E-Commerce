@@ -8,6 +8,13 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
+$stmtCredit = $conn->prepare("SELECT store_credit FROM users WHERE id = ?");
+$stmtCredit->bind_param("i", $user_id);
+$stmtCredit->execute();
+$creditResult = $stmtCredit->get_result();
+$creditRow = $creditResult->fetch_assoc();
+
+$store_credit = $creditRow['store_credit'] ?? 0;
 
 $stmt = $conn->prepare("
     SELECT cart.quantity, items.price
@@ -24,6 +31,9 @@ $total = 0;
 while ($row = $result->fetch_assoc()) {
     $total += $row['price'] * $row['quantity'];
 }
+$credit_used_preview = min($store_credit, $total);
+$pay_now_preview = $total - $credit_used_preview;
+$rewards_earned_preview = $pay_now_preview * 0.10;
 
 if ($total <= 0) {
     die("Your cart is empty. <a href='index.php'>Go shopping</a>");
@@ -42,6 +52,19 @@ if ($total <= 0) {
 
 <h3>Total: $<?= number_format($total, 2) ?></h3>
 
+<h3>Store Credit</h3>
+
+<p>Available Credit: $<?= number_format($store_credit, 2) ?></p>
+
+<label>
+    <input type="checkbox" name="use_store_credit">
+    Use my store credit
+</label>
+
+<p>If used, you pay: $<?= number_format($pay_now_preview, 2) ?></p>
+
+<p>Rewards earned after order: $<?= number_format($rewards_earned_preview, 2) ?></p>
+
 <h3>Shipping Information</h3>
 
 <input type="text" id="shipping_name" placeholder="Full Name" required><br><br>
@@ -54,6 +77,8 @@ if ($total <= 0) {
 <input type="text" id="buyer_phone" placeholder="Phone Number"><br><br>
 
 <form method="post" action="place_test_order.php">
+    <input type="hidden" name="use_store_credit" id="test_use_store_credit">
+
     <input type="hidden" name="shipping_name" id="test_shipping_name">
     <input type="hidden" name="shipping_address1" id="test_shipping_address1">
     <input type="hidden" name="shipping_address2" id="test_shipping_address2">
@@ -73,6 +98,9 @@ if ($total <= 0) {
 
 <script>
 function copyShipping() {
+document.getElementById('test_use_store_credit').value =
+    document.querySelector('input[name="use_store_credit"]').checked ? "1" : "";
+
     document.getElementById('test_shipping_name').value = document.getElementById('shipping_name').value;
     document.getElementById('test_shipping_address1').value = document.getElementById('shipping_address1').value;
     document.getElementById('test_shipping_address2').value = document.getElementById('shipping_address2').value;
